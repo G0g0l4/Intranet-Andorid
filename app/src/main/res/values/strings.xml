@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Intranet</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="register">Register</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="new_user_register_now">New user? Register Now</string>
+    <string name="login">Login</string>
+    <string name="already_have_an_account_edited">Already have an Account?</string>
+    <string name="here_s_your_first_step_with_us">Here’s your first step with us!</string>
 </resources>
