@@ -10,6 +10,7 @@
     android:gravity="center">
 
     <ScrollView
+        android:id="@+id/registerMainContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true">
@@ -142,6 +143,7 @@
     </ScrollView>
 
     <View
+        android:id="@+id/registerView"
         android:layout_width="11dp"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
@@ -159,4 +161,18 @@
         android:layout_marginBottom="30dp"
         android:adjustViewBounds="false"
         android:src="@drawable/ic_back_img" />
+
+    <RelativeLayout
+        android:id="@+id/registerProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            style="@style/SpinKitView.Large.WanderingCubes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:SpinKit_Color="@color/colorPrimary" />
+    </RelativeLayout>
 </RelativeLayout>

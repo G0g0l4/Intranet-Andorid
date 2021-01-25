@@ -2,10 +2,8 @@ package com.gogola.intranet
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
 import com.gogola.intranet.extinsions.validateEmail
@@ -73,8 +71,16 @@ class LoginActivity : AppCompatActivity() {
         }
 
         cirLoginButton.setOnClickListener() {
+            val progressBar: RelativeLayout = findViewById(R.id.loginProgressBar)
+            val loginMainContent: ScrollView = findViewById(R.id.loginMainContent)
+            val view: View = findViewById(R.id.loginView)
+            val sidebarRegister: ImageView = findViewById(R.id.sidebarRegister)
+
             if (validate()) {
-//                Progress bar
+                progressBar.visibility = View.VISIBLE
+                loginMainContent.visibility = View.GONE
+                view.visibility = View.GONE
+                sidebarRegister.visibility = View.GONE
 
                 auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
                     .addOnCompleteListener(this) { task ->
@@ -85,8 +91,13 @@ class LoginActivity : AppCompatActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {
+                            progressBar.visibility = View.GONE
+                            loginMainContent.visibility = View.VISIBLE
+                            view.visibility = View.VISIBLE
+                            sidebarRegister.visibility = View.VISIBLE
+
                             Toast.makeText(
-                                baseContext, "Authentication failed.",
+                                baseContext, "Email or Password is not correct.",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }

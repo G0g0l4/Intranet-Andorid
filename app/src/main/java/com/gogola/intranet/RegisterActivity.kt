@@ -2,6 +2,7 @@ package com.gogola.intranet
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -87,9 +88,15 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         registerBtn.setOnClickListener() {
+            val progressBar: RelativeLayout = findViewById(R.id.registerProgressBar)
+            val registerMainContent: ScrollView = findViewById(R.id.registerMainContent)
+            val view: View = findViewById(R.id.registerView)
+            val sidebarLogin: ImageView = findViewById(R.id.sidebarLoginIn)
             if (validate()) {
-
-//                Progress Bar
+                progressBar.visibility = View.VISIBLE
+                sidebarLogin.visibility = View.GONE
+                view.visibility = View.GONE
+                registerMainContent.visibility = View.GONE
 
                 if (validate()) {
                     auth.createUserWithEmailAndPassword(
@@ -103,6 +110,10 @@ class RegisterActivity : AppCompatActivity() {
                                     Toast.LENGTH_SHORT
                                 ).show()
                             } else {
+                                progressBar.visibility = View.GONE
+                                sidebarLogin.visibility = View.VISIBLE
+                                view.visibility = View.VISIBLE
+                                registerMainContent.visibility = View.VISIBLE
                                 Toast.makeText(
                                     baseContext, "Registration failed.",
                                     Toast.LENGTH_SHORT
