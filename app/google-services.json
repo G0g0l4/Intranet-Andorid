@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "271548586623",
+    "project_id": "intranet-3cc07",
+    "storage_bucket": "intranet-3cc07.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:271548586623:android:c7d48681df2836859a7d4a",
+        "android_client_info": {
+          "package_name": "com.gogola.intranet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "271548586623-ssh47u24con6shrevo766552qqb4814c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gogola.intranet",
+            "certificate_hash": "65cd9a762bc2388f31ad8bd47c8c30a901908a34"
+          }
+        },
+        {
+          "client_id": "271548586623-cs1ag6o0eu5qp6drlj8fdnqvt2uh2o49.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvSYr-XHoSehzL83qLHdFG1uCo4nSPaW0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "271548586623-cs1ag6o0eu5qp6drlj8fdnqvt2uh2o49.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

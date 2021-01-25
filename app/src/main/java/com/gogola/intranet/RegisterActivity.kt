@@ -2,10 +2,7 @@ package com.gogola.intranet
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
@@ -14,27 +11,37 @@ import com.gogola.intranet.extinsions.validateFirstName
 import com.gogola.intranet.extinsions.validateLastName
 import com.gogola.intranet.extinsions.validatePassword
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class RegisterActivity : AppCompatActivity() {
+
+    private lateinit var auth: FirebaseAuth
+    private lateinit var firstName: EditText
+    private lateinit var lastName: EditText
+    private lateinit var email: EditText
+    private lateinit var password: EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide();
         setContentView(R.layout.activity_register)
+        auth = Firebase.auth
 
         fun onLoginClick() {
             startActivity(Intent(this, LoginActivity::class.java))
             overridePendingTransition(R.anim.slide_in_left, android.R.anim.slide_out_right)
         }
 
-        fun validate() {
-            var valid: Boolean = false;
-            val firstName: EditText = findViewById(R.id.editTextFirstName)
+        fun validate(): Boolean {
+            firstName = findViewById(R.id.editTextFirstName)
             val firstNameError: TextInputLayout = findViewById(R.id.firstNameError)
-            val lastName: EditText = findViewById(R.id.editTextLastName)
+            lastName = findViewById(R.id.editTextLastName)
             val lastNameError: TextInputLayout = findViewById(R.id.lastNameError)
-            val email: EditText = findViewById(R.id.editTextEmail)
+            email = findViewById(R.id.editTextEmail)
             val emailError = findViewById<TextInputLayout>(R.id.emailError)
-            val password: EditText = findViewById(R.id.editTextPassword)
+            password = findViewById(R.id.editTextPassword)
             val passwordError: TextInputLayout = findViewById(R.id.passwordError)
 
             if (!validateEmail(email.text.toString()).success) {
@@ -62,8 +69,9 @@ class RegisterActivity : AppCompatActivity() {
                 validateLastName(lastName.text.toString()).success and
                 validatePassword(password.text.toString()).success
             ) {
-                valid = true
+                return true
             }
+            return false
         }
 
         val haveAccountText = findViewById<TextView>(R.id.haveAccount);
@@ -79,7 +87,30 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         registerBtn.setOnClickListener() {
-            validate()
+            if (validate()) {
+
+//                Progress Bar
+
+                if (validate()) {
+                    auth.createUserWithEmailAndPassword(
+                        email.text.toString(),
+                        password.text.toString()
+                    )
+                        .addOnCompleteListener(this) { task ->
+                            if (task.isSuccessful) {
+                                Toast.makeText(
+                                    baseContext, "Registration completed.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    baseContext, "Registration failed.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                }
+            }
         }
     }
 }
