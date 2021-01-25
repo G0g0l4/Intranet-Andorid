@@ -130,6 +130,7 @@
                         android:id="@+id/haveAccount"
                         style="@style/parent"
                         android:layout_marginTop="@dimen/loginViewsMargin"
+                        android:layout_marginBottom="10dp"
                         android:text="@string/already_have_an_account"
                         android:textAlignment="center"
                         android:textColor="@color/themeColor"

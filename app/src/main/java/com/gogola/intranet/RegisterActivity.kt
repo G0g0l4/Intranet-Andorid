@@ -1,6 +1,7 @@
 package com.gogola.intranet
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -32,6 +33,10 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
         auth = Firebase.auth
         val db = Firebase.firestore
+        firstName = findViewById(R.id.editTextFirstName)
+        lastName = findViewById(R.id.editTextLastName)
+        email = findViewById(R.id.editTextEmail)
+        password = findViewById(R.id.editTextPassword)
         sidebarLoginIn = findViewById(R.id.sidebarLoginIn)
 
         fun onLoginClick() {
@@ -40,13 +45,9 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         fun validate(): Boolean {
-            firstName = findViewById(R.id.editTextFirstName)
             val firstNameError: TextInputLayout = findViewById(R.id.firstNameError)
-            lastName = findViewById(R.id.editTextLastName)
             val lastNameError: TextInputLayout = findViewById(R.id.lastNameError)
-            email = findViewById(R.id.editTextEmail)
             val emailError = findViewById<TextInputLayout>(R.id.emailError)
-            password = findViewById(R.id.editTextPassword)
             val passwordError: TextInputLayout = findViewById(R.id.passwordError)
 
             if (!validateEmail(email.text.toString()).success) {
@@ -96,6 +97,7 @@ class RegisterActivity : AppCompatActivity() {
             val view: View = findViewById(R.id.registerView)
 
             if (validate()) {
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
                 progressBar.visibility = View.VISIBLE
                 sidebarLoginIn.visibility = View.GONE
                 view.visibility = View.GONE
@@ -143,10 +145,29 @@ class RegisterActivity : AppCompatActivity() {
                                     baseContext, "Registration failed.",
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                             }
                         }
                 }
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("email", email.text.toString())
+        outState.putString(
+            "password", password.text.toString()
+        )
+        outState.putString("firstName", firstName.text.toString())
+        outState.putString("lastName", lastName.text.toString())
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        email.setText(savedInstanceState.getString("email"))
+        password.setText(savedInstanceState.getString("password"))
+        firstName.setText(savedInstanceState.getString("password"))
+        lastName.setText(savedInstanceState.getString("password"))
     }
 }

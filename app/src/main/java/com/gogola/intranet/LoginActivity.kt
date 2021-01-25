@@ -1,6 +1,7 @@
 package com.gogola.intranet
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -23,6 +24,9 @@ class LoginActivity : AppCompatActivity() {
         supportActionBar?.hide();
         setContentView(R.layout.activity_login)
         auth = Firebase.auth
+        email = findViewById(R.id.loginEditTextEmail)
+        password = findViewById(R.id.loginEditTextPassword)
+        val registerSideBar = findViewById<ImageView>(R.id.sidebarRegister)
 
         auth.currentUser?.let {
 //      redirect to posts activity
@@ -34,9 +38,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         fun validate(): Boolean {
-            email = findViewById(R.id.loginEditTextEmail)
             val emailError = findViewById<TextInputLayout>(R.id.loginEmailError)
-            password = findViewById(R.id.loginEditTextPassword)
             val passwordError: TextInputLayout = findViewById(R.id.loginPasswordError)
 
             if (!validateEmail(email.text.toString()).success) {
@@ -59,7 +61,6 @@ class LoginActivity : AppCompatActivity() {
 
 
         val registerText = findViewById<TextView>(R.id.registerNowText)
-        val registerSideBar = findViewById<ImageView>(R.id.sidebarRegister)
         val cirLoginButton: CircularProgressButton = findViewById(R.id.cirLoginButton)
 
         registerText.setOnClickListener() {
@@ -74,13 +75,13 @@ class LoginActivity : AppCompatActivity() {
             val progressBar: RelativeLayout = findViewById(R.id.loginProgressBar)
             val loginMainContent: ScrollView = findViewById(R.id.loginMainContent)
             val view: View = findViewById(R.id.loginView)
-            val sidebarRegister: ImageView = findViewById(R.id.sidebarRegister)
 
             if (validate()) {
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
                 progressBar.visibility = View.VISIBLE
                 loginMainContent.visibility = View.GONE
                 view.visibility = View.GONE
-                sidebarRegister.visibility = View.GONE
+                registerSideBar.visibility = View.GONE
 
                 auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
                     .addOnCompleteListener(this) { task ->
@@ -94,15 +95,31 @@ class LoginActivity : AppCompatActivity() {
                             progressBar.visibility = View.GONE
                             loginMainContent.visibility = View.VISIBLE
                             view.visibility = View.VISIBLE
-                            sidebarRegister.visibility = View.VISIBLE
+                            registerSideBar.visibility = View.VISIBLE
 
                             Toast.makeText(
                                 baseContext, "Email or Password is not correct.",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                         }
                     }
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("email", email.text.toString())
+        outState.putString(
+            "password",
+            password.text.toString()
+        )
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        email.setText(savedInstanceState.getString("email"))
+        password.setText(savedInstanceState.getString("password"))
     }
 }
