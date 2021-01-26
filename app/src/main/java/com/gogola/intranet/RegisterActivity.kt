@@ -38,6 +38,12 @@ class RegisterActivity : AppCompatActivity() {
         email = findViewById(R.id.editTextEmail)
         password = findViewById(R.id.editTextPassword)
         sidebarLoginIn = findViewById(R.id.sidebarLoginIn)
+        val intent = Intent(this, MainActivity::class.java)
+
+        auth.currentUser?.let {
+            startActivity(intent)
+            finish()
+        }
 
         fun onLoginClick() {
             startActivity(Intent(this, LoginActivity::class.java))
@@ -109,7 +115,6 @@ class RegisterActivity : AppCompatActivity() {
                         password.text.toString()
                     )
                         .addOnCompleteListener(this) { task ->
-
                             if (task.isSuccessful) {
                                 val userId = auth.currentUser?.uid
                                 val userData = hashMapOf(
@@ -121,12 +126,11 @@ class RegisterActivity : AppCompatActivity() {
                                 db.collection("usersData")
                                     .add(userData)
                                     .addOnSuccessListener { documentReference ->
-                                        Toast.makeText(
-                                            baseContext, "Registration completed.",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                       startActivity(intent)
+                                       finish()
                                     }
                                     .addOnFailureListener { e ->
+                                        auth.currentUser?.delete()
                                         progressBar.visibility = View.GONE
                                         sidebarLoginIn.visibility = View.VISIBLE
                                         view.visibility = View.VISIBLE
@@ -135,6 +139,7 @@ class RegisterActivity : AppCompatActivity() {
                                             baseContext, "Registration failed.",
                                             Toast.LENGTH_SHORT
                                         ).show()
+                                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                                     }
                             } else {
                                 progressBar.visibility = View.GONE

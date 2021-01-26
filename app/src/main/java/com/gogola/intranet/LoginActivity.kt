@@ -27,9 +27,11 @@ class LoginActivity : AppCompatActivity() {
         email = findViewById(R.id.loginEditTextEmail)
         password = findViewById(R.id.loginEditTextPassword)
         val registerSideBar = findViewById<ImageView>(R.id.sidebarRegister)
+        val intent = Intent(this, MainActivity::class.java)
 
         auth.currentUser?.let {
-//      redirect to posts activity
+            startActivity(intent)
+            finish()
         }
 
         fun onLoginClick() {
@@ -86,11 +88,8 @@ class LoginActivity : AppCompatActivity() {
                 auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-                            val user = auth.currentUser
-                            Toast.makeText(
-                                baseContext, "signIn completed.",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            startActivity(intent)
+                            finish()
                         } else {
                             progressBar.visibility = View.GONE
                             loginMainContent.visibility = View.VISIBLE
