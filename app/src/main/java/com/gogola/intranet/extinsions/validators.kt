@@ -81,3 +81,20 @@ fun validatePassword(password: String): Valid {
         }
     }
 }
+
+fun validateFreePostText(text: String): Valid {
+    return when {
+        text.isEmpty() -> {
+            Valid(
+                false,
+                "Text is required!"
+            )
+        }
+        else -> {
+            Valid(
+                true,
+                ""
+            )
+        }
+    }
+}
