@@ -25,8 +25,7 @@ class MainActivity : AppCompatActivity() {
         val adapter = PageAdapter(supportFragmentManager)
         pager.adapter = adapter
         navBar.setupWithViewPager(pager)
-        for (i in 0 until navBar.tabCount) {
-            navBar.getTabAt(i)?.setIcon(R.drawable.ic_baseline_home_24)
-        }
+        navBar.getTabAt(0)?.setIcon(R.drawable.ic_baseline_home_24)
+        navBar.getTabAt(1)?.setIcon(R.drawable.ic_search)
     }
 }

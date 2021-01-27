@@ -29,7 +29,7 @@ class PostsFragment : Fragment() {
     }
 
     private fun startFragment(view: View) {
-        val castField: RecyclerView = view.findViewById(R.id.posts)
+        val postField: RecyclerView = view.findViewById(R.id.posts)
         val newPostButton: FloatingActionButton = view.findViewById(R.id.newPostButton)
         val posts = listOf<Post>(
             Post(
@@ -75,10 +75,10 @@ class PostsFragment : Fragment() {
                 "4/2020/12"
             )
         )
-        castField.adapter = PostsAdapter(posts)
-        castField.layoutManager =
+        postField.adapter = PostsAdapter(posts)
+        postField.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        (castField.adapter as PostsAdapter).notifyDataSetChanged()
+        (postField.adapter as PostsAdapter).notifyDataSetChanged()
 
         newPostButton.setOnClickListener() {
             startActivity(Intent(context, CreatePostActivity::class.java))
