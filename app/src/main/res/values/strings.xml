@@ -11,4 +11,6 @@
     <string name="already_have_an_account_edited">Already have an Account?</string>
     <string name="here_s_your_first_step_with_us">Here’s your first step with us!</string>
     <string name="new_post">New Post</string>
+    <string name="create_new_post">Create New Post</string>
+    <string name="what_s_happening">What\'s happening?</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.gogola.intranet.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,9 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.gogola.intranet.CreatePostActivity
 import com.gogola.intranet.R
 import com.gogola.intranet.adapters.PostsAdapter
 import com.gogola.intranet.classes.Post
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class PostsFragment : Fragment() {
     override fun onCreateView(
@@ -27,6 +30,7 @@ class PostsFragment : Fragment() {
 
     private fun startFragment(view: View) {
         val castField: RecyclerView = view.findViewById(R.id.posts)
+        val newPostButton: FloatingActionButton = view.findViewById(R.id.newPostButton)
         val posts = listOf<Post>(
             Post(
                 "1213",
@@ -75,5 +79,9 @@ class PostsFragment : Fragment() {
         castField.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         (castField.adapter as PostsAdapter).notifyDataSetChanged()
+
+        newPostButton.setOnClickListener() {
+            startActivity(Intent(context, CreatePostActivity::class.java))
+        }
     }
 }
