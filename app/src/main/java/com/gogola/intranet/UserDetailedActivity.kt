@@ -16,7 +16,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class UserDetailedActivity : AppCompatActivity() {
-    private lateinit var addFriendBtn: Button
     private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,10 +30,18 @@ class UserDetailedActivity : AppCompatActivity() {
         })
     }
 
-    private fun checkFriends(): Boolean {
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        val addFriendBtn: Button = findViewById(R.id.add_friend_btn)
+        val mainContent: LinearLayout = findViewById(R.id.detailed_main_content)
+        val loader: RelativeLayout = findViewById(R.id.add_friend_progress_bar)
+        val alreadyFriendsText: TextView = findViewById(R.id.already_friends)
+
         val db = Firebase.firestore
         val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
-        var state: Boolean = false
+
+        mainContent.visibility = View.GONE
+        loader.visibility = View.VISIBLE
         db.collection("friends")
             .get()
             .addOnSuccessListener { documents ->
@@ -46,10 +53,12 @@ class UserDetailedActivity : AppCompatActivity() {
                         (secondUser == userId &&
                                 firstUser == user.UID)
                     ) {
-                        state = true
-//                        TODO state don't reassigns
+                        addFriendBtn.visibility = View.GONE
+                        alreadyFriendsText.visibility = View.VISIBLE
                     }
                 }
+                mainContent.visibility = View.VISIBLE
+                loader.visibility = View.GONE
             }
             .addOnFailureListener {
                 Toast.makeText(
@@ -57,39 +66,15 @@ class UserDetailedActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-        return state
-    }
-
-
-    override fun onResumeFragments() {
-        super.onResumeFragments()
-        addFriendBtn = findViewById(R.id.add_friend_btn)
-        val alreadyFriendsText: TextView = findViewById(R.id.already_friends)
-
-        fun hideOrShow() {
-            if (checkFriends()) {
-                addFriendBtn.visibility = View.GONE
-                alreadyFriendsText.visibility = View.VISIBLE
-            } else {
-                addFriendBtn.visibility = View.VISIBLE
-                alreadyFriendsText.visibility = View.GONE
-            }
-
-        }
-
-        hideOrShow()
 
         addFriendBtn.setOnClickListener() {
-            val db = Firebase.firestore
-            val userId = FirebaseAuth.getInstance().currentUser?.uid
+
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
             val friends = hashMapOf(
-                "first_user" to userId.toString(),
+                "first_user" to userId,
                 "second_user" to user.UID,
                 "created_at" to FieldValue.serverTimestamp()
             )
-            val mainContent: LinearLayout = findViewById(R.id.detailed_main_content)
-            val loader: RelativeLayout = findViewById(R.id.add_friend_progress_bar)
             mainContent.visibility = View.GONE
             loader.visibility = View.VISIBLE
 
@@ -98,6 +83,8 @@ class UserDetailedActivity : AppCompatActivity() {
                 .addOnSuccessListener {
                     mainContent.visibility = View.VISIBLE
                     loader.visibility = View.GONE
+                    addFriendBtn.visibility = View.GONE
+                    alreadyFriendsText.visibility = View.VISIBLE
                     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                     Toast.makeText(
                         baseContext, "You and ${user.firstName} are now friends.",
@@ -113,8 +100,6 @@ class UserDetailedActivity : AppCompatActivity() {
                     loader.visibility = View.GONE
                     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                 }
-
-            hideOrShow()
         }
     }
 

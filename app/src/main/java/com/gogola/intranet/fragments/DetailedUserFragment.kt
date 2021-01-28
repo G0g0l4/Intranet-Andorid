@@ -22,6 +22,11 @@ class DetailedUserFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_detailed_user, container, false)
     }
 
+    override fun onResume() {
+        super.onResume()
+        view?.let { startFragment(it) }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fullName = view.findViewById(R.id.full_name)
