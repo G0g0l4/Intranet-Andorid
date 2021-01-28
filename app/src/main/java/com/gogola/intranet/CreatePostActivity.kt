@@ -56,10 +56,11 @@ class CreatePostActivity : AppCompatActivity() {
             if (validateFreePostText(postText.text.toString()).success) {
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
                 val userId = auth.currentUser?.uid
+                val timestamp = System.currentTimeMillis() / 1000
                 val postData = hashMapOf(
                     "UID" to userId.toString(),
                     "text" to postText.text.toString(),
-                    "created_at" to FieldValue.serverTimestamp()
+                    "created_at" to timestamp.toString()
                 )
                 val mainContent: FragmentContainerView = findViewById(R.id.create_post_fragment)
                 val loader: RelativeLayout = findViewById(R.id.createPostLoader)

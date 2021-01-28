@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/posts"
         android:layout_width="0dp"
@@ -30,4 +29,56 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_add" />
 
+
+    <RelativeLayout
+        android:id="@+id/default_view_posts"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/damn_no_posts"
+                android:textColor="@color/main_text_color"
+                android:textSize="27sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/maybe_you_should_try_add_some_posts"
+                android:textColor="@color/main_text_color"
+                android:textSize="15sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/postsProgressBar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            style="@style/SpinKitView.Large.WanderingCubes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:SpinKit_Color="@color/colorAccent" />
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

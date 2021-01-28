@@ -1,5 +1,6 @@
 package com.gogola.intranet.adapters
 
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gogola.intranet.R
 import com.gogola.intranet.classes.Post
+import java.util.*
 
 class PostsAdapter(
     private val posts: List<Post>,
@@ -30,12 +32,16 @@ class PostsAdapter(
         private val postText: TextView = view.findViewById(R.id.text)
         private val postDate: TextView = view.findViewById(R.id.date)
 
+        private fun getDate(timestamp: Long): String {
+            val calendar = Calendar.getInstance(Locale.ENGLISH)
+            calendar.timeInMillis = timestamp * 1000L
+            return DateFormat.format("dd MMM, yyyy", calendar).toString()
+        }
+
         fun setContent(postInfo: Post) {
-            with(postInfo) {
-                name.text = "Test Test"
-                postText.text = postInfo.text
-                postDate.text = postInfo.date
-            }
+            name.text = postInfo.postOwner
+            postText.text = postInfo.text
+            postDate.text = getDate(postInfo.date.toLong())
         }
     }
 }

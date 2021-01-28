@@ -20,4 +20,6 @@
     <string name="friend">Friend</string>
     <string name="maybe_you_should_try_add_friends">Maybe you should try add friends</string>
     <string name="damn_no_friends">Damn! no friends</string>
+    <string name="damn_no_posts">Damn! no posts</string>
+    <string name="maybe_you_should_try_add_some_posts">Maybe you should try add some posts</string>
 </resources>
