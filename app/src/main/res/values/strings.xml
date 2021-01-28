@@ -14,4 +14,6 @@
     <string name="create_new_post">Create New Post</string>
     <string name="what_s_happening">What\'s happening?</string>
     <string name="search_user_by_name">Search User By Name</string>
+    <string name="damn_no_results">Damn! No Results</string>
+    <string name="maybe_you_should_try_another_words">Maybe you should try another words</string>
 </resources>

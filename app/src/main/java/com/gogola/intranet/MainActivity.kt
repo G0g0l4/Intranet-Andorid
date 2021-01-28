@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide();
         setContentView(R.layout.activity_main)
         auth = Firebase.auth
-        val db = Firebase.firestore
 
         val pager: ViewPager = findViewById(R.id.pager)
         val navBar: TabLayout = findViewById(R.id.nav_bar)

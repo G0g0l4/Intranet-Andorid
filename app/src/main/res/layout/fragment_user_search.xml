@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/search_container"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
@@ -24,8 +24,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/userImg"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginEnd="15dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_search"
@@ -33,7 +33,7 @@
             app:civ_border_width="2dp" />
 
         <EditText
-            android:id="@+id/editTextTextPersonName"
+            android:id="@+id/search"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -52,9 +52,61 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:paddingBottom="15dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_container" />
+
+    <RelativeLayout
+        android:id="@+id/default_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_container">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/damn_no_results"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/main_text_color"
+                android:textSize="27sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/maybe_you_should_try_another_words"
+                android:textColor="@color/main_text_color"
+                android:textSize="15sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/searchProgressBar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_container">
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            style="@style/SpinKitView.Large.WanderingCubes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:SpinKit_Color="@color/colorAccent" />
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

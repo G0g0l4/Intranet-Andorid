@@ -123,7 +123,7 @@ class RegisterActivity : AppCompatActivity() {
                                     "firstName" to firstName.text.toString(),
                                     "lastName" to lastName.text.toString()
                                 )
-                                db.collection("usersData")
+                                db.collection("users")
                                     .add(userData)
                                     .addOnSuccessListener { documentReference ->
                                        startActivity(intent)
