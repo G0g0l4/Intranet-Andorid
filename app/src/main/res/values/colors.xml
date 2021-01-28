@@ -7,6 +7,7 @@
     <color name="card_bg_color">#FFFFFF</color>
     <color name="main_bg_color">#f6f7fd</color>
     <color name="main_text_color">#78849e</color>
+    <color name="top_rounded_bg_color">#FFFFFF</color>
 
     <!--normal colors-->
     <color name="darkTextColor">#020000</color>

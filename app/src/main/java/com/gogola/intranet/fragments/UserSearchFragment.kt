@@ -73,12 +73,14 @@ class UserSearchFragment : Fragment() {
                 if (users.size > 0) {
                     usersView.visibility = View.VISIBLE
                     searchBar.visibility = View.GONE
+                    defaultView.visibility = View.GONE
                     field.adapter = SearchUsersAdapter(users)
                     field.layoutManager =
                         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     (field.adapter as SearchUsersAdapter).notifyDataSetChanged()
                 } else {
                     searchBar.visibility = View.GONE
+                    usersView.visibility = View.GONE
                     defaultView.visibility = View.VISIBLE
                 }
             }
