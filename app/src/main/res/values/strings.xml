@@ -18,4 +18,6 @@
     <string name="maybe_you_should_try_another_words">Maybe you should try another words</string>
     <string name="add_a_friend">Add A Friend</string>
     <string name="friend">Friend</string>
+    <string name="maybe_you_should_try_add_friends">Maybe you should try add friends</string>
+    <string name="damn_no_friends">Damn! no friends</string>
 </resources>
