@@ -68,49 +68,51 @@ class FriendsFragment : Fragment() {
                     )
                     allFriends.add(user)
                 }
-            }
-            .addOnFailureListener {
-                Toast.makeText(
-                    context, "Something went wrong, try again letter.",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
 
-        db.collection("users")
-            .get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    val userId = document.getString("UID").toString()
-                    for (friend in allFriends) {
-                        if ((friend.firstUser == userId &&
-                                    friend.secondUser == auth.currentUser?.uid.toString()) ||
-                            (friend.firstUser == auth.currentUser?.uid.toString() &&
-                                    friend.secondUser == userId)
-                        ) {
-                            val user = User(
-                                userId,
-                                document.getString("firstName").toString(),
-                                document.getString("lastName").toString(),
-                                document.getString("email").toString(),
-                            )
-                            users.add(user)
+//            fetch users
+                db.collection("users")
+                    .get()
+                    .addOnSuccessListener { allUser ->
+                        for (user in allUser) {
+                            val userId = user.getString("UID").toString()
+                            for (friend in allFriends) {
+                                if ((friend.firstUser == userId &&
+                                            friend.secondUser == auth.currentUser?.uid.toString()) ||
+                                    (friend.firstUser == auth.currentUser?.uid.toString() &&
+                                            friend.secondUser == userId)
+                                ) {
+                                    val userData = User(
+                                        userId,
+                                        user.getString("firstName").toString(),
+                                        user.getString("lastName").toString(),
+                                        user.getString("email").toString(),
+                                    )
+                                    users.add(userData)
+                                }
+                            }
+
+                        }
+                        if (users.size > 0) {
+                            usersView.visibility = View.VISIBLE
+                            progressBar.visibility = View.GONE
+                            defaultView.visibility = View.GONE
+                            field.adapter = SearchUsersAdapter(users)
+                            field.layoutManager =
+                                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                            (field.adapter as SearchUsersAdapter).notifyDataSetChanged()
+                        } else {
+                            progressBar.visibility = View.GONE
+                            usersView.visibility = View.GONE
+                            defaultView.visibility = View.VISIBLE
                         }
                     }
+                    .addOnFailureListener {
+                        Toast.makeText(
+                            context, "Something went wrong, try again letter.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
 
-                }
-                if (users.size > 0) {
-                    usersView.visibility = View.VISIBLE
-                    progressBar.visibility = View.GONE
-                    defaultView.visibility = View.GONE
-                    field.adapter = SearchUsersAdapter(users)
-                    field.layoutManager =
-                        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                    (field.adapter as SearchUsersAdapter).notifyDataSetChanged()
-                } else {
-                    progressBar.visibility = View.GONE
-                    usersView.visibility = View.GONE
-                    defaultView.visibility = View.VISIBLE
-                }
             }
             .addOnFailureListener {
                 Toast.makeText(
@@ -119,5 +121,4 @@ class FriendsFragment : Fragment() {
                 ).show()
             }
     }
-
 }
