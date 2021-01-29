@@ -66,6 +66,15 @@
                     android:textSize="16sp"
                     android:visibility="gone" />
 
+                <Button
+                    android:id="@+id/delete_from_friends"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="60dp"
+                    android:visibility="gone"
+                    android:backgroundTint="@color/delete"
+                    android:text="@string/remove_from_friends" />
+
             </LinearLayout>
 
             <RelativeLayout

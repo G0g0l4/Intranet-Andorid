@@ -9,6 +9,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.gogola.intranet.classes.User
 import com.gogola.intranet.extinsions.setFragment
+import com.gogola.intranet.extinsions.showMessage
 import com.gogola.intranet.fragments.DetailedUserFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
@@ -32,7 +33,9 @@ class UserDetailedActivity : AppCompatActivity() {
 
     override fun onResumeFragments() {
         super.onResumeFragments()
+        val generalError: String = "Something went wrong, try again letter."
         val addFriendBtn: Button = findViewById(R.id.add_friend_btn)
+        val deleteFromFriendsBtn: Button = findViewById(R.id.delete_from_friends)
         val mainContent: LinearLayout = findViewById(R.id.detailed_main_content)
         val loader: RelativeLayout = findViewById(R.id.add_friend_progress_bar)
         val alreadyFriendsText: TextView = findViewById(R.id.already_friends)
@@ -54,6 +57,7 @@ class UserDetailedActivity : AppCompatActivity() {
                                 firstUser == user.UID)
                     ) {
                         addFriendBtn.visibility = View.GONE
+                        deleteFromFriendsBtn.visibility = View.VISIBLE
                         alreadyFriendsText.visibility = View.VISIBLE
                     }
                 }
@@ -61,10 +65,7 @@ class UserDetailedActivity : AppCompatActivity() {
                 loader.visibility = View.GONE
             }
             .addOnFailureListener {
-                Toast.makeText(
-                    this, "Something went wrong, try again letter.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                showMessage(generalError, this)
             }
 
         addFriendBtn.setOnClickListener() {
@@ -82,22 +83,53 @@ class UserDetailedActivity : AppCompatActivity() {
                 .add(friends)
                 .addOnSuccessListener {
                     mainContent.visibility = View.VISIBLE
+                    deleteFromFriendsBtn.visibility = View.VISIBLE
                     loader.visibility = View.GONE
                     addFriendBtn.visibility = View.GONE
                     alreadyFriendsText.visibility = View.VISIBLE
                     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
-                    Toast.makeText(
-                        baseContext, "You and ${user.firstName} are now friends.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showMessage("You and ${user.firstName} are now friends.", this)
                 }
                 .addOnFailureListener {
-                    Toast.makeText(
-                        baseContext, "Something went wrong, try again letter.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showMessage(generalError, this)
                     mainContent.visibility = View.VISIBLE
                     loader.visibility = View.GONE
+                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                }
+        }
+
+        deleteFromFriendsBtn.setOnClickListener() {
+            mainContent.visibility = View.GONE
+            loader.visibility = View.VISIBLE
+            db.collection("friends")
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val firstUser = document.getString("first_user").toString()
+                        val secondUser = document.getString("second_user").toString()
+                        if ((firstUser == userId &&
+                                    secondUser == user.UID) ||
+                            (secondUser == userId &&
+                                    firstUser == user.UID)
+                        ) {
+                            document.reference.delete()
+                        }
+                    }
+                    mainContent.visibility = View.VISIBLE
+                    addFriendBtn.visibility = View.VISIBLE
+                    loader.visibility = View.GONE
+                    alreadyFriendsText.visibility = View.GONE
+                    deleteFromFriendsBtn.visibility = View.GONE
+                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                    showMessage("You deleted user from friends successfully", this)
+                }
+                .addOnFailureListener {
+                    showMessage(generalError, this)
+                    mainContent.visibility = View.VISIBLE
+                    loader.visibility = View.GONE
+                    addFriendBtn.visibility = View.GONE
+                    alreadyFriendsText.visibility = View.VISIBLE
+                    deleteFromFriendsBtn.visibility = View.VISIBLE
                     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                 }
         }
