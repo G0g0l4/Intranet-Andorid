@@ -124,10 +124,11 @@ class RegisterActivity : AppCompatActivity() {
                                     "lastName" to lastName.text.toString()
                                 )
                                 db.collection("users")
-                                    .add(userData)
-                                    .addOnSuccessListener { documentReference ->
-                                       startActivity(intent)
-                                       finish()
+                                    .document(userId.toString())
+                                    .set(userData)
+                                    .addOnSuccessListener {
+                                        startActivity(intent)
+                                        finish()
                                     }
                                     .addOnFailureListener { e ->
                                         auth.currentUser?.delete()
@@ -139,7 +140,8 @@ class RegisterActivity : AppCompatActivity() {
                                             baseContext, "Registration failed.",
                                             Toast.LENGTH_SHORT
                                         ).show()
-                                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                                        requestedOrientation =
+                                            ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                                     }
                             } else {
                                 progressBar.visibility = View.GONE

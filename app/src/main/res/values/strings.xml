@@ -22,4 +22,9 @@
     <string name="damn_no_friends">Damn! no friends</string>
     <string name="damn_no_posts">Damn! no posts</string>
     <string name="maybe_you_should_try_add_some_posts">Maybe you should try add some posts</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="enter_password_to_make_changes">Enter password to make changes</string>
+    <string name="password">Password</string>
+    <string name="cancel">Cancel</string>
 </resources>

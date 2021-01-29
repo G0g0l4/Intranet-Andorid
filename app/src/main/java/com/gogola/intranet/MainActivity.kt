@@ -25,7 +25,8 @@ class MainActivity : AppCompatActivity() {
         pager.adapter = adapter
         navBar.setupWithViewPager(pager)
         navBar.getTabAt(0)?.setIcon(R.drawable.ic_baseline_home_24)
-        navBar.getTabAt(1)?.setIcon(R.drawable.ic_search)
-        navBar.getTabAt(2)?.setIcon(R.drawable.ic_groups)
+        navBar.getTabAt(1)?.setIcon(R.drawable.ic_person)
+        navBar.getTabAt(2)?.setIcon(R.drawable.ic_search)
+        navBar.getTabAt(3)?.setIcon(R.drawable.ic_groups)
     }
 }
