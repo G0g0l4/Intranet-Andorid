@@ -27,4 +27,9 @@
     <string name="enter_password_to_make_changes">Enter password to make changes</string>
     <string name="password">Password</string>
     <string name="cancel">Cancel</string>
+    <string name="update_password">Update Password</string>
+    <string name="enter_current_password">Enter current password</string>
+    <string name="enter_new_password">Enter new password</string>
+    <string name="repeat_new_password">Repeat new password</string>
+    <string name="save_new_password">Save new password</string>
 </resources>

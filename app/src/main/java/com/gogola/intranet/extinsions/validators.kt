@@ -59,18 +59,35 @@ fun validateLastName(lastName: String): Valid {
     }
 }
 
-fun validatePassword(password: String): Valid {
+fun validatePassword(password: String, fieldName: String = "Password"): Valid {
     return when {
         password.isEmpty() -> {
             Valid(
                 false,
-                "Password is required!"
+                "$fieldName is required!"
             )
         }
         password.length < 6 -> {
             Valid(
                 false,
-                "Password length must be greater then 6 characters!"
+                "$fieldName length must be greater then 6 characters!"
+            )
+        }
+        else -> {
+            Valid(
+                true,
+                ""
+            )
+        }
+    }
+}
+
+fun validatePasswordMatch(newPassword: String, repeatedPassword: String): Valid {
+    return when {
+        newPassword != repeatedPassword -> {
+            Valid(
+                false,
+                "Passwords do not match!"
             )
         }
         else -> {

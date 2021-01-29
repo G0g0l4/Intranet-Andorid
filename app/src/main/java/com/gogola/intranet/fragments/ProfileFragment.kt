@@ -1,5 +1,6 @@
 package com.gogola.intranet.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
@@ -10,10 +11,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import com.gogola.intranet.LoginActivity
 import com.gogola.intranet.R
-import com.gogola.intranet.extinsions.validateEmail
-import com.gogola.intranet.extinsions.validateFirstName
-import com.gogola.intranet.extinsions.validateLastName
-import com.gogola.intranet.extinsions.validatePassword
+import com.gogola.intranet.extinsions.*
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -30,10 +28,19 @@ class ProfileFragment : Fragment() {
     private lateinit var lastName: EditText
     private lateinit var saveBtn: Button
     private lateinit var updateProfileBtn: Button
-    private lateinit var singOut: Button
+    private lateinit var singOut: ImageView
     private lateinit var cancel: Button
+    private lateinit var updatePassword: Button
     private lateinit var profileContent: LinearLayout
     private lateinit var enterPassword: LinearLayout
+    private lateinit var updatePasswordView: LinearLayout
+    private lateinit var currentPassword: EditText
+    private lateinit var newPassword: EditText
+    private lateinit var repeatPassword: EditText
+    private lateinit var saveNewPasswordBtn: Button
+    private lateinit var cancelNewPasswordBtn: Button
+
+    private lateinit var generalError: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,7 +63,17 @@ class ProfileFragment : Fragment() {
         profileContent = view.findViewById(R.id.profile_content)
         enterPassword = view.findViewById(R.id.enter_password)
         updateProfileBtn = view.findViewById(R.id.update)
+        updatePassword = view.findViewById(R.id.update_password)
         cancel = view.findViewById(R.id.cancel)
+        updatePasswordView = view.findViewById(R.id.change_password)
+        currentPassword = view.findViewById(R.id.current_password)
+        newPassword = view.findViewById(R.id.new_password)
+        repeatPassword = view.findViewById(R.id.repeat_password)
+        saveNewPasswordBtn = view.findViewById(R.id.update_password_btn)
+        cancelNewPasswordBtn = view.findViewById(R.id.cancel_update_password)
+
+        generalError = "Something went wrong, try again letter."
+
         startFragment(view)
     }
 
@@ -81,10 +98,7 @@ class ProfileFragment : Fragment() {
                 profileContent.visibility = View.VISIBLE
             }
             .addOnFailureListener {
-                Toast.makeText(
-                    context, "Something went wrong, try again letter.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                context?.let { it1 -> showMessage(generalError, it1) }
             }
 
         singOut.setOnClickListener() {
@@ -100,31 +114,38 @@ class ProfileFragment : Fragment() {
                 startActivity(intent)
                 activity?.finish()
             } else {
-                Toast.makeText(
-                    context, "Please log in first to perform the task.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                context?.let { it1 -> showMessage("Please log in first to perform the task.", it1) }
+
             }
         }
 
         fun validate(): Boolean {
             if (!validateEmail(email.text.toString()).success) {
-                Toast.makeText(
-                    context, validateEmail(email.text.toString()).message,
-                    Toast.LENGTH_SHORT
-                ).show()
+                context?.let { it1 ->
+                    showMessage(
+                        validateEmail(email.text.toString()).message,
+                        it1
+                    )
+                }
+
             }
             if (!validateFirstName(firstName.text.toString()).success) {
-                Toast.makeText(
-                    context, validateFirstName(firstName.text.toString()).message,
-                    Toast.LENGTH_SHORT
-                ).show()
+                context?.let { it1 ->
+                    showMessage(
+                        validateFirstName(firstName.text.toString()).message,
+                        it1
+                    )
+                }
+
             }
             if (!validateLastName(lastName.text.toString()).success) {
-                Toast.makeText(
-                    context, validateLastName(lastName.text.toString()).message,
-                    Toast.LENGTH_SHORT
-                ).show()
+                context?.let { it1 ->
+                    showMessage(
+                        validateLastName(lastName.text.toString()).message,
+                        it1
+                    )
+                }
+
             }
             if (validateEmail(email.text.toString()).success and
                 validateFirstName(firstName.text.toString()).success and
@@ -137,12 +158,66 @@ class ProfileFragment : Fragment() {
 
         fun validPassword(): Boolean {
             if (!validatePassword(password.text.toString()).success) {
-                Toast.makeText(
-                    context, validatePassword(password.text.toString()).message,
-                    Toast.LENGTH_SHORT
-                ).show()
+                context?.let { it1 ->
+                    showMessage(
+                        validatePassword(password.text.toString()).message,
+                        it1
+                    )
+                }
+
             }
             if (validatePassword(password.text.toString()).success) {
+                return true
+            }
+            return false
+        }
+
+        fun validateUpdatingPassword(): Boolean {
+            if (!validatePassword(currentPassword.text.toString()).success) {
+                context?.let { it1 ->
+                    showMessage(
+                        validatePassword(
+                            currentPassword.text.toString(),
+                            "Current password"
+                        ).message, it1
+                    )
+                }
+
+            }
+            if (!validatePassword(newPassword.text.toString()).success) {
+                context?.let { it1 ->
+                    showMessage(
+                        validatePassword(
+                            newPassword.text.toString(),
+                            "New password"
+                        ).message, it1
+                    )
+                }
+
+            }
+            if (!validatePasswordMatch(
+                    newPassword.text.toString(),
+                    repeatPassword.text.toString()
+                ).success
+            ) {
+                context?.let { it1 ->
+                    showMessage(
+                        validatePasswordMatch(
+                            newPassword.text.toString(),
+                            repeatPassword.text.toString()
+                        ).message,
+                        it1
+                    )
+                }
+            }
+
+            if (validatePassword(currentPassword.text.toString()).success and
+                validatePassword(newPassword.text.toString()).success and
+                validatePasswordMatch(
+                    newPassword.text.toString(),
+                    repeatPassword.text.toString()
+                ).success
+            ) {
                 return true
             }
             return false
@@ -156,10 +231,12 @@ class ProfileFragment : Fragment() {
                     enterPassword.visibility = View.VISIBLE
                 }
             } else {
-                Toast.makeText(
-                    context, "Please log in first to perform the task.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                context?.let { it1 ->
+                    showMessage(
+                        "Please log in first to perform the task.",
+                        it1
+                    )
+                }
             }
         }
 
@@ -196,30 +273,99 @@ class ProfileFragment : Fragment() {
                                         progressBar.visibility = View.GONE
                                         enterPassword.visibility = View.GONE
                                         profileContent.visibility = View.VISIBLE
-                                        Toast.makeText(
-                                            context, "Your profile updated successfully",
-                                            Toast.LENGTH_LONG
-                                        ).show()
+                                        context?.let { it1 ->
+                                            showMessage(
+                                                "Your profile updated successfully",
+                                                it1
+                                            )
+                                        }
                                         ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                                     }
                             }
                             .addOnFailureListener {
                                 progressBar.visibility = View.GONE
                                 enterPassword.visibility = View.VISIBLE
-                                Toast.makeText(
-                                    context, "Something went wrong, try again letter.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                context?.let { it1 ->
+                                    showMessage(
+                                        generalError,
+                                        it1
+                                    )
+                                }
                                 ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                             }
                     }
                     .addOnFailureListener {
                         progressBar.visibility = View.GONE
                         enterPassword.visibility = View.VISIBLE
-                        Toast.makeText(
-                            context, "Password is incorrect.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        context?.let { it1 ->
+                            showMessage(
+                                "Password is incorrect.",
+                                it1
+                            )
+                        }
+                        ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                    }
+            }
+        }
+
+        updatePassword.setOnClickListener() {
+            profileContent.visibility = View.GONE
+            updatePasswordView.visibility = View.VISIBLE
+        }
+
+        cancelNewPasswordBtn.setOnClickListener() {
+            profileContent.visibility = View.VISIBLE
+            updatePasswordView.visibility = View.GONE
+        }
+
+        saveNewPasswordBtn.setOnClickListener() {
+            if (validateUpdatingPassword()) {
+                progressBar.visibility = View.VISIBLE
+                updatePasswordView.visibility = View.GONE
+
+                ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
+                val user = FirebaseAuth.getInstance().currentUser
+                val credential = EmailAuthProvider
+                    .getCredential(
+                        user?.email.toString(),
+                        currentPassword.text.toString()
+                    )
+                user!!.reauthenticate(credential)
+                    .addOnSuccessListener {
+                        FirebaseAuth.getInstance().currentUser!!.updatePassword(newPassword.text.toString())
+                            .addOnSuccessListener {
+                                progressBar.visibility = View.GONE
+                                updatePasswordView.visibility = View.GONE
+                                profileContent.visibility = View.VISIBLE
+                                context?.let { it1 ->
+                                    showMessage(
+                                        "Your password updated successfully",
+                                        it1
+                                    )
+                                }
+                                ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                            }
+                            .addOnFailureListener {
+                                progressBar.visibility = View.GONE
+                                updatePasswordView.visibility = View.VISIBLE
+                                context?.let { it1 ->
+                                    showMessage(
+                                        generalError,
+                                        it1
+                                    )
+                                }
+                                ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                            }
+                    }
+                    .addOnFailureListener {
+                        progressBar.visibility = View.GONE
+                        updatePasswordView.visibility = View.VISIBLE
+                        context?.let { it1 ->
+                            showMessage(
+                                "Current password is incorrect.",
+                                it1
+                            )
+                        }
                         ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                     }
             }
