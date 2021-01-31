@@ -37,11 +37,10 @@ class CreatePostFragment : Fragment() {
     }
 
     private fun startFragment(view: View) {
-        val intent = Intent(context, MainActivity::class.java)
         val cancelBtn: ImageView = view.findViewById(R.id.cancel)
 
         cancelBtn.setOnClickListener() {
-            startActivity(intent)
+            activity?.finish()
         }
     }
 }

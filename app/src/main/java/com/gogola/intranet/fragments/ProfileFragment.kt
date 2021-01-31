@@ -1,6 +1,5 @@
 package com.gogola.intranet.fragments
 
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
@@ -17,7 +16,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import java.net.PasswordAuthentication
 
 class ProfileFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
@@ -249,7 +247,7 @@ class ProfileFragment : Fragment() {
             if (validPassword()) {
                 progressBar.visibility = View.VISIBLE
                 enterPassword.visibility = View.GONE
-                ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
                 val user = FirebaseAuth.getInstance().currentUser
                 val credential = EmailAuthProvider
                     .getCredential(
@@ -279,7 +277,8 @@ class ProfileFragment : Fragment() {
                                                 it1
                                             )
                                         }
-                                        ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                                        activity?.requestedOrientation =
+                                            ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                                     }
                             }
                             .addOnFailureListener {
@@ -291,7 +290,8 @@ class ProfileFragment : Fragment() {
                                         it1
                                     )
                                 }
-                                ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                             }
                     }
                     .addOnFailureListener {
@@ -303,7 +303,7 @@ class ProfileFragment : Fragment() {
                                 it1
                             )
                         }
-                        ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                     }
             }
         }
@@ -323,7 +323,7 @@ class ProfileFragment : Fragment() {
                 progressBar.visibility = View.VISIBLE
                 updatePasswordView.visibility = View.GONE
 
-                ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
                 val user = FirebaseAuth.getInstance().currentUser
                 val credential = EmailAuthProvider
                     .getCredential(
@@ -343,7 +343,8 @@ class ProfileFragment : Fragment() {
                                         it1
                                     )
                                 }
-                                ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                             }
                             .addOnFailureListener {
                                 progressBar.visibility = View.GONE
@@ -354,7 +355,8 @@ class ProfileFragment : Fragment() {
                                         it1
                                     )
                                 }
-                                ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                             }
                     }
                     .addOnFailureListener {
@@ -366,7 +368,7 @@ class ProfileFragment : Fragment() {
                                 it1
                             )
                         }
-                        ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
                     }
             }
         }

@@ -2,21 +2,21 @@ package com.gogola.intranet
 
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.View
 import android.widget.EditText
 import android.widget.RelativeLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentContainerView
 import com.gogola.intranet.extinsions.setFragment
+import com.gogola.intranet.extinsions.showMessage
 import com.gogola.intranet.extinsions.validateFreePostText
 import com.gogola.intranet.fragments.CreatePostFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -47,6 +47,13 @@ class CreatePostActivity : AppCompatActivity() {
         supportFragmentManager.putFragment(outState, "fragment", CreatePostFragment())
     }
 
+    private fun blockOrientation() {
+        requestedOrientation =
+            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+            } else ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+    }
+
     override fun onResumeFragments() {
         super.onResumeFragments()
         val doneBtn: FloatingActionButton = findViewById(R.id.createPostDone)
@@ -54,7 +61,7 @@ class CreatePostActivity : AppCompatActivity() {
         doneBtn.setOnClickListener() {
             val postText: EditText = findViewById(R.id.post_text)
             if (validateFreePostText(postText.text.toString()).success) {
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
+                blockOrientation()
                 val userId = auth.currentUser?.uid
                 val timestamp = System.currentTimeMillis() / 1000
                 val postData = hashMapOf(
@@ -69,29 +76,19 @@ class CreatePostActivity : AppCompatActivity() {
 
                 db.collection("posts")
                     .add(postData)
-                    .addOnSuccessListener { documentReference ->
-                        startActivity(Intent(this, MainActivity::class.java))
-                        finish()
-                        Toast.makeText(
-                            baseContext, "New post added successfully.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    .addOnSuccessListener {
                         loader.visibility = View.GONE
+                        showMessage("New post added successfully.", baseContext)
+                        finish()
                     }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(
-                            baseContext, "Adding new post failed.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    .addOnFailureListener {
+                        showMessage("Adding new post failed.", baseContext)
                         mainContent.visibility = View.VISIBLE
                         loader.visibility = View.GONE
-                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
                     }
             } else {
-                Toast.makeText(
-                    baseContext, validateFreePostText(postText.text.toString()).message,
-                    Toast.LENGTH_SHORT
-                ).show()
+                showMessage(validateFreePostText(postText.text.toString()).message, baseContext)
             }
         }
     }

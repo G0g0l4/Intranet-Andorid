@@ -17,6 +17,7 @@ import com.gogola.intranet.adapters.SearchUsersAdapter
 import com.gogola.intranet.classes.Friends
 import com.gogola.intranet.classes.Post
 import com.gogola.intranet.classes.User
+import com.gogola.intranet.extinsions.showMessage
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -28,7 +29,6 @@ class PostsFragment : Fragment() {
     private lateinit var defaultView: RelativeLayout
     private lateinit var postField: RecyclerView
     private lateinit var progressBar: RelativeLayout
-    private lateinit var newPostButton: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +44,6 @@ class PostsFragment : Fragment() {
         defaultView = view.findViewById(R.id.default_view_posts)
         postField = view.findViewById(R.id.posts)
         progressBar = view.findViewById(R.id.postsProgressBar)
-        newPostButton = view.findViewById(R.id.newPostButton)
         startFragment(view)
     }
 
@@ -56,9 +55,9 @@ class PostsFragment : Fragment() {
     private fun startFragment(view: View) {
         defaultView.visibility = View.GONE
         postField.visibility = View.GONE
-        newPostButton.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
 
+        val generalError = "Something went wrong, try again letter."
         val db = Firebase.firestore
         val users = ArrayList<User>()
         val allFriends = ArrayList<Friends>()
@@ -117,6 +116,8 @@ class PostsFragment : Fragment() {
                                     for (friend in users) {
                                         if (friend.UID == postOwner) {
                                             val postData = Post(
+                                                post.reference.id,
+                                                post.getString("UID").toString(),
                                                 friend.firstName + " " + friend.lastName,
                                                 post.getString("text").toString(),
                                                 post.getString("created_at").toString(),
@@ -126,6 +127,8 @@ class PostsFragment : Fragment() {
                                     }
                                     if (postOwner == auth.currentUser?.uid) {
                                         val postData = Post(
+                                            post.reference.id,
+                                            post.getString("UID").toString(),
                                             currentUserName,
                                             post.getString("text").toString(),
                                             post.getString("created_at").toString(),
@@ -134,7 +137,7 @@ class PostsFragment : Fragment() {
                                     }
                                 }
                                 if (allPosts.size > 0) {
-                                    postField.adapter = PostsAdapter(allPosts)
+                                    postField.adapter = context?.let { PostsAdapter(allPosts, it) }
                                     postField.layoutManager =
                                         LinearLayoutManager(
                                             context,
@@ -143,43 +146,26 @@ class PostsFragment : Fragment() {
                                         )
                                     (postField.adapter as PostsAdapter).notifyDataSetChanged()
 
-                                    newPostButton.visibility = View.VISIBLE
                                     postField.visibility = View.VISIBLE
                                     progressBar.visibility = View.GONE
                                     defaultView.visibility = View.GONE
                                 } else {
-                                    newPostButton.visibility = View.VISIBLE
                                     progressBar.visibility = View.GONE
                                     postField.visibility = View.GONE
                                     defaultView.visibility = View.VISIBLE
                                 }
                             }
                             .addOnFailureListener {
-                                Toast.makeText(
-                                    context, "Something went wrong, try again letter.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                context?.let { it1 -> showMessage(generalError, it1) }
                             }
-
 
                     }
                     .addOnFailureListener {
-                        Toast.makeText(
-                            context, "Something went wrong, try again letter.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        context?.let { it1 -> showMessage(generalError, it1) }
                     }
-
             }
             .addOnFailureListener {
-                Toast.makeText(
-                    context, "Something went wrong, try again letter.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                context?.let { it1 -> showMessage(generalError, it1) }
             }
-
-        newPostButton.setOnClickListener() {
-            startActivity(Intent(context, CreatePostActivity::class.java))
-        }
     }
 }

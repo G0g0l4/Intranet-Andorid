@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/posts"
+        android:id="@+id/own_posts"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
@@ -15,9 +15,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/newPostButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/colorAccent"
+        android:clickable="true"
+        android:contentDescription="@string/new_post"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_add" />
 
     <RelativeLayout
-        android:id="@+id/default_view_posts"
+        android:id="@+id/default_view_own_posts"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
@@ -49,9 +62,8 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
     </RelativeLayout>
 
-
     <RelativeLayout
-        android:id="@+id/postsProgressBar"
+        android:id="@+id/own_posts_progress"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
@@ -67,4 +79,5 @@
             android:layout_height="wrap_content"
             app:SpinKit_Color="@color/colorAccent" />
     </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
