@@ -49,6 +49,7 @@ class ProfileFragment : Fragment() {
     private lateinit var storage: FirebaseStorage
     private lateinit var storageReference: StorageReference
     private lateinit var imageProgress: RelativeLayout
+    private var uploadImageIdentical by Delegates.notNull<Boolean>()
 
     private lateinit var generalError: String
 
@@ -85,6 +86,7 @@ class ProfileFragment : Fragment() {
         storage = FirebaseStorage.getInstance()
         storageReference = storage.reference
         imageProgress = view.findViewById(R.id.image_progress_bar)
+        uploadImageIdentical = false
         generalError = "Something went wrong, try again letter."
 
         startFragment(view)
@@ -131,14 +133,17 @@ class ProfileFragment : Fragment() {
         imageProgress.visibility = View.VISIBLE
         singOut.visibility = View.GONE
         profileImage.visibility = View.GONE
+        uploadImageIdentical = true
         val riversRef: StorageReference =
             storageReference.child("images/${auth.currentUser?.uid.toString()}")
-        riversRef.putFile(imageUri).addOnSuccessListener {
-            context?.let { it1 -> showMessage("Image Uploaded", it1) }
-            showImage()
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        }
+        riversRef.putFile(imageUri)
+            .addOnSuccessListener {
+                context?.let { it1 -> showMessage("Image Uploaded", it1) }
+                showImage()
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+            }
             .addOnFailureListener() {
+                uploadImageIdentical = false
                 imageProgress.visibility = View.GONE
                 singOut.visibility = View.VISIBLE
                 profileImage.visibility = View.VISIBLE
@@ -155,7 +160,9 @@ class ProfileFragment : Fragment() {
         profileImage.visibility = View.GONE
         val db = Firebase.firestore
 
-        showImage()
+        if (!uploadImageIdentical) {
+            showImage()
+        }
 
         db.collection("users")
             .document(auth.currentUser?.uid.toString())
