@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import com.gogola.intranet.MainActivity
 import com.gogola.intranet.R
 import com.gogola.intranet.classes.Post
+import com.gogola.intranet.extinsions.blockOrientation
 import com.gogola.intranet.extinsions.setFragment
 import com.gogola.intranet.extinsions.showMessage
 import com.gogola.intranet.extinsions.validateFreePostText
@@ -75,9 +76,7 @@ class EditPostFragment : Fragment() {
         menu.visibility = View.GONE
         editTextContainer.visibility = View.GONE
         updateBtn.visibility = View.GONE
-        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-        } else activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        activity?.let { blockOrientation(it) }
     }
 
     private fun hideLoader() {
@@ -85,7 +84,7 @@ class EditPostFragment : Fragment() {
         menu.visibility = View.VISIBLE
         editTextContainer.visibility = View.VISIBLE
         updateBtn.visibility = View.VISIBLE
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 
     private fun startFragment(view: View) {
@@ -102,7 +101,7 @@ class EditPostFragment : Fragment() {
                     "text", postText.text.toString()
                 ).addOnSuccessListener {
                     loader.visibility = View.GONE
-                    activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+                    activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                     context?.let { it1 -> showMessage("Post updated.", it1) }
                     activity?.finish()
 
@@ -131,7 +130,7 @@ class EditPostFragment : Fragment() {
             db.collection("posts").document(post.postID).delete()
                 .addOnSuccessListener {
                     loader.visibility = View.GONE
-                    activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+                    activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                     activity?.finish()
                     context?.let { it1 -> showMessage("Post deleted.", it1) }
 

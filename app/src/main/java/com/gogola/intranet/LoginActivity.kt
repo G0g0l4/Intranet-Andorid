@@ -7,6 +7,8 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+import com.gogola.intranet.extinsions.blockOrientation
+import com.gogola.intranet.extinsions.showMessage
 import com.gogola.intranet.extinsions.validateEmail
 import com.gogola.intranet.extinsions.validatePassword
 import com.google.android.material.textfield.TextInputLayout
@@ -21,7 +23,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.hide();
+        supportActionBar?.hide()
         setContentView(R.layout.activity_login)
         auth = Firebase.auth
         email = findViewById(R.id.loginEditTextEmail)
@@ -46,12 +48,12 @@ class LoginActivity : AppCompatActivity() {
             if (!validateEmail(email.text.toString()).success) {
                 emailError.error = validateEmail(email.text.toString()).message
             } else {
-                emailError.isErrorEnabled = false;
+                emailError.isErrorEnabled = false
             }
             if (!validatePassword(password.text.toString()).success) {
                 passwordError.error = validatePassword(password.text.toString()).message
             } else {
-                passwordError.isErrorEnabled = false;
+                passwordError.isErrorEnabled = false
             }
             if (validateEmail(email.text.toString()).success and
                 validatePassword(password.text.toString()).success
@@ -70,7 +72,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         registerSideBar.setOnClickListener() {
-            onLoginClick();
+            onLoginClick()
         }
 
         cirLoginButton.setOnClickListener() {
@@ -79,7 +81,7 @@ class LoginActivity : AppCompatActivity() {
             val view: View = findViewById(R.id.loginView)
 
             if (validate()) {
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
+                blockOrientation(this)
                 progressBar.visibility = View.VISIBLE
                 loginMainContent.visibility = View.GONE
                 view.visibility = View.GONE
@@ -95,12 +97,8 @@ class LoginActivity : AppCompatActivity() {
                             loginMainContent.visibility = View.VISIBLE
                             view.visibility = View.VISIBLE
                             registerSideBar.visibility = View.VISIBLE
-
-                            Toast.makeText(
-                                baseContext, "Email or Password is not correct.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                            showMessage("Email or Password is not correct.", baseContext)
+                            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                         }
                     }
             }

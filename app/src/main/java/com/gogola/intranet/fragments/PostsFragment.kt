@@ -1,24 +1,19 @@
 package com.gogola.intranet.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.gogola.intranet.CreatePostActivity
 import com.gogola.intranet.R
 import com.gogola.intranet.adapters.PostsAdapter
-import com.gogola.intranet.adapters.SearchUsersAdapter
 import com.gogola.intranet.classes.Friends
 import com.gogola.intranet.classes.Post
 import com.gogola.intranet.classes.User
 import com.gogola.intranet.extinsions.showMessage
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore

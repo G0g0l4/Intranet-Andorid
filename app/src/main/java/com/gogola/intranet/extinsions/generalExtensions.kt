@@ -1,6 +1,9 @@
 package com.gogola.intranet.extinsions
 
+import android.app.Activity
 import android.content.Context
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
@@ -18,4 +21,11 @@ fun showMessage(message: String, context: Context) {
         context, message,
         Toast.LENGTH_SHORT
     ).show()
+}
+
+fun blockOrientation(activity: Activity) {
+    activity.requestedOrientation =
+        if (activity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        } else ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 }

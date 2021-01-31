@@ -13,7 +13,7 @@ class EditPostActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.hide();
+        supportActionBar?.hide()
         setContentView(R.layout.activity_edit_post)
         post = intent.getSerializableExtra("post") as Post
 

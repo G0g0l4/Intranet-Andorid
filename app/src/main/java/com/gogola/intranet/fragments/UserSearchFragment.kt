@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gogola.intranet.R
 import com.gogola.intranet.adapters.SearchUsersAdapter
 import com.gogola.intranet.classes.User
+import com.gogola.intranet.extinsions.showMessage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -84,11 +85,8 @@ class UserSearchFragment : Fragment() {
                     defaultView.visibility = View.VISIBLE
                 }
             }
-            .addOnFailureListener { exception ->
-                Toast.makeText(
-                    context, "Something went wrong, try again letter.",
-                    Toast.LENGTH_SHORT
-                ).show()
+            .addOnFailureListener {
+                context?.let { it1 -> showMessage("Something went wrong, try again letter.", it1) }
             }
     }
 

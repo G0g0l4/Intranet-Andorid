@@ -1,12 +1,10 @@
 package com.gogola.intranet.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import com.gogola.intranet.MainActivity
 import com.gogola.intranet.R
 
 class CreatePostFragment : Fragment() {

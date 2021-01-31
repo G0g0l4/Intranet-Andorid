@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.gogola.intranet.classes.User
+import com.gogola.intranet.extinsions.blockOrientation
 import com.gogola.intranet.extinsions.setFragment
 import com.gogola.intranet.extinsions.showMessage
 import com.gogola.intranet.fragments.DetailedUserFragment
@@ -21,7 +22,7 @@ class UserDetailedActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.hide();
+        supportActionBar?.hide()
         setContentView(R.layout.activity_user_detailed)
         user = intent.getSerializableExtra("user") as User
         setFragment(R.id.fragment_detailed_user, DetailedUserFragment().apply {
@@ -69,8 +70,7 @@ class UserDetailedActivity : AppCompatActivity() {
             }
 
         addFriendBtn.setOnClickListener() {
-
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
+            blockOrientation(this)
             val friends = hashMapOf(
                 "first_user" to userId,
                 "second_user" to user.UID,
@@ -87,14 +87,14 @@ class UserDetailedActivity : AppCompatActivity() {
                     loader.visibility = View.GONE
                     addFriendBtn.visibility = View.GONE
                     alreadyFriendsText.visibility = View.VISIBLE
-                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                     showMessage("You and ${user.firstName} are now friends.", this)
                 }
                 .addOnFailureListener {
                     showMessage(generalError, this)
                     mainContent.visibility = View.VISIBLE
                     loader.visibility = View.GONE
-                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                 }
         }
 
@@ -120,7 +120,7 @@ class UserDetailedActivity : AppCompatActivity() {
                     loader.visibility = View.GONE
                     alreadyFriendsText.visibility = View.GONE
                     deleteFromFriendsBtn.visibility = View.GONE
-                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                     showMessage("You deleted user from friends successfully", this)
                 }
                 .addOnFailureListener {
@@ -130,7 +130,7 @@ class UserDetailedActivity : AppCompatActivity() {
                     addFriendBtn.visibility = View.GONE
                     alreadyFriendsText.visibility = View.VISIBLE
                     deleteFromFriendsBtn.visibility = View.VISIBLE
-                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                 }
         }
     }

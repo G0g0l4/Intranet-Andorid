@@ -1,8 +1,6 @@
 package com.gogola.intranet
 
-import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.View
@@ -10,6 +8,7 @@ import android.widget.EditText
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentContainerView
+import com.gogola.intranet.extinsions.blockOrientation
 import com.gogola.intranet.extinsions.setFragment
 import com.gogola.intranet.extinsions.showMessage
 import com.gogola.intranet.extinsions.validateFreePostText
@@ -25,7 +24,7 @@ class CreatePostActivity : AppCompatActivity() {
     private var valid: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.hide();
+        supportActionBar?.hide()
         setContentView(R.layout.activity_create_post)
 
         if (savedInstanceState != null) {
@@ -47,13 +46,6 @@ class CreatePostActivity : AppCompatActivity() {
         supportFragmentManager.putFragment(outState, "fragment", CreatePostFragment())
     }
 
-    private fun blockOrientation() {
-        requestedOrientation =
-            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-            } else ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-    }
-
     override fun onResumeFragments() {
         super.onResumeFragments()
         val doneBtn: FloatingActionButton = findViewById(R.id.createPostDone)
@@ -61,7 +53,7 @@ class CreatePostActivity : AppCompatActivity() {
         doneBtn.setOnClickListener() {
             val postText: EditText = findViewById(R.id.post_text)
             if (validateFreePostText(postText.text.toString()).success) {
-                blockOrientation()
+                blockOrientation(this)
                 val userId = auth.currentUser?.uid
                 val timestamp = System.currentTimeMillis() / 1000
                 val postData = hashMapOf(
@@ -85,7 +77,7 @@ class CreatePostActivity : AppCompatActivity() {
                         showMessage("Adding new post failed.", baseContext)
                         mainContent.visibility = View.VISIBLE
                         loader.visibility = View.GONE
-                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                     }
             } else {
                 showMessage(validateFreePostText(postText.text.toString()).message, baseContext)

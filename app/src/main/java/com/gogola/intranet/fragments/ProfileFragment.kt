@@ -247,7 +247,7 @@ class ProfileFragment : Fragment() {
             if (validPassword()) {
                 progressBar.visibility = View.VISIBLE
                 enterPassword.visibility = View.GONE
-                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
+                activity?.let { blockOrientation(it) }
                 val user = FirebaseAuth.getInstance().currentUser
                 val credential = EmailAuthProvider
                     .getCredential(
@@ -277,8 +277,7 @@ class ProfileFragment : Fragment() {
                                                 it1
                                             )
                                         }
-                                        activity?.requestedOrientation =
-                                            ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                                     }
                             }
                             .addOnFailureListener {
@@ -290,8 +289,7 @@ class ProfileFragment : Fragment() {
                                         it1
                                     )
                                 }
-                                activity?.requestedOrientation =
-                                    ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                             }
                     }
                     .addOnFailureListener {
@@ -303,7 +301,7 @@ class ProfileFragment : Fragment() {
                                 it1
                             )
                         }
-                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                     }
             }
         }
@@ -322,8 +320,7 @@ class ProfileFragment : Fragment() {
             if (validateUpdatingPassword()) {
                 progressBar.visibility = View.VISIBLE
                 updatePasswordView.visibility = View.GONE
-
-                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
+                activity?.let { blockOrientation(it) }
                 val user = FirebaseAuth.getInstance().currentUser
                 val credential = EmailAuthProvider
                     .getCredential(
@@ -343,8 +340,7 @@ class ProfileFragment : Fragment() {
                                         it1
                                     )
                                 }
-                                activity?.requestedOrientation =
-                                    ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                             }
                             .addOnFailureListener {
                                 progressBar.visibility = View.GONE
@@ -355,8 +351,7 @@ class ProfileFragment : Fragment() {
                                         it1
                                     )
                                 }
-                                activity?.requestedOrientation =
-                                    ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                             }
                     }
                     .addOnFailureListener {
@@ -368,7 +363,7 @@ class ProfileFragment : Fragment() {
                                 it1
                             )
                         }
-                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                     }
             }
         }
