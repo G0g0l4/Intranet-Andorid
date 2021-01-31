@@ -1,8 +1,11 @@
 package com.gogola.intranet.fragments
 
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +19,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.squareup.picasso.Picasso
+import kotlin.properties.Delegates
 
 class ProfileFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
@@ -37,6 +44,11 @@ class ProfileFragment : Fragment() {
     private lateinit var repeatPassword: EditText
     private lateinit var saveNewPasswordBtn: Button
     private lateinit var cancelNewPasswordBtn: Button
+    private lateinit var profileImage: ImageView
+    private lateinit var imageUri: Uri
+    private lateinit var storage: FirebaseStorage
+    private lateinit var storageReference: StorageReference
+    private lateinit var imageProgress: RelativeLayout
 
     private lateinit var generalError: String
 
@@ -69,7 +81,10 @@ class ProfileFragment : Fragment() {
         repeatPassword = view.findViewById(R.id.repeat_password)
         saveNewPasswordBtn = view.findViewById(R.id.update_password_btn)
         cancelNewPasswordBtn = view.findViewById(R.id.cancel_update_password)
-
+        profileImage = view.findViewById(R.id.profile_image)
+        storage = FirebaseStorage.getInstance()
+        storageReference = storage.reference
+        imageProgress = view.findViewById(R.id.image_progress_bar)
         generalError = "Something went wrong, try again letter."
 
         startFragment(view)
@@ -80,10 +95,67 @@ class ProfileFragment : Fragment() {
         view?.let { startFragment(it) }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (data != null && data.data != null && requestCode == 1 && resultCode == RESULT_OK) {
+            imageUri = data.data!!
+            profileImage.setImageURI(imageUri)
+            uploadPicture()
+        }
+    }
+
+    private fun chooseImage() {
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(intent, 1)
+    }
+
+    private fun showImage() {
+        storageReference.child("images/${auth.currentUser?.uid.toString()}").downloadUrl
+            .addOnSuccessListener {
+                Picasso.get().load(it).into(profileImage)
+                imageProgress.visibility = View.GONE
+                singOut.visibility = View.VISIBLE
+                profileImage.visibility = View.VISIBLE
+            }
+            .addOnFailureListener {
+                imageProgress.visibility = View.GONE
+                singOut.visibility = View.VISIBLE
+                profileImage.visibility = View.VISIBLE
+            }
+    }
+
+    private fun uploadPicture() {
+        activity?.let { blockOrientation(it) }
+        imageProgress.visibility = View.VISIBLE
+        singOut.visibility = View.GONE
+        profileImage.visibility = View.GONE
+        val riversRef: StorageReference =
+            storageReference.child("images/${auth.currentUser?.uid.toString()}")
+        riversRef.putFile(imageUri).addOnSuccessListener {
+            context?.let { it1 -> showMessage("Image Uploaded", it1) }
+            showImage()
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        }
+            .addOnFailureListener() {
+                imageProgress.visibility = View.GONE
+                singOut.visibility = View.VISIBLE
+                profileImage.visibility = View.VISIBLE
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                context?.let { it1 -> showMessage("Something Went wrong, try again letter.", it1) }
+            }
+    }
+
     private fun startFragment(view: View) {
         progressBar.visibility = View.VISIBLE
         profileContent.visibility = View.GONE
+        imageProgress.visibility = View.VISIBLE
+        singOut.visibility = View.GONE
+        profileImage.visibility = View.GONE
         val db = Firebase.firestore
+
+        showImage()
 
         db.collection("users")
             .document(auth.currentUser?.uid.toString())
@@ -98,6 +170,10 @@ class ProfileFragment : Fragment() {
             .addOnFailureListener {
                 context?.let { it1 -> showMessage(generalError, it1) }
             }
+
+        profileImage.setOnClickListener() {
+            chooseImage()
+        }
 
         singOut.setOnClickListener() {
             if (auth.currentUser != null) {
@@ -277,7 +353,8 @@ class ProfileFragment : Fragment() {
                                                 it1
                                             )
                                         }
-                                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                                        activity?.requestedOrientation =
+                                            ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                                     }
                             }
                             .addOnFailureListener {
@@ -289,7 +366,8 @@ class ProfileFragment : Fragment() {
                                         it1
                                     )
                                 }
-                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                             }
                     }
                     .addOnFailureListener {
@@ -340,7 +418,8 @@ class ProfileFragment : Fragment() {
                                         it1
                                     )
                                 }
-                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                             }
                             .addOnFailureListener {
                                 progressBar.visibility = View.GONE
@@ -351,7 +430,8 @@ class ProfileFragment : Fragment() {
                                         it1
                                     )
                                 }
-                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                             }
                     }
                     .addOnFailureListener {

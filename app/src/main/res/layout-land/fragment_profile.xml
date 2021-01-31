@@ -14,10 +14,25 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/profile_image"
             android:layout_width="430dp"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/blank_user" />
+
+        <RelativeLayout
+            android:id="@+id/image_progress_bar"
+            android:layout_width="430dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                style="@style/SpinKitView.Large.WanderingCubes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:SpinKit_Color="@color/colorAccent" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"

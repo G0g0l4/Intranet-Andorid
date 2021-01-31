@@ -16,6 +16,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 
 class UserDetailedActivity : AppCompatActivity() {
     private lateinit var user: User
@@ -40,12 +42,28 @@ class UserDetailedActivity : AppCompatActivity() {
         val mainContent: LinearLayout = findViewById(R.id.detailed_main_content)
         val loader: RelativeLayout = findViewById(R.id.add_friend_progress_bar)
         val alreadyFriendsText: TextView = findViewById(R.id.already_friends)
+        val userImgLoader: RelativeLayout = findViewById(R.id.user_img_progress_bar)
+        val userImage: ImageView = findViewById(R.id.user_profile_img)
+        val storageReference = FirebaseStorage.getInstance().reference
 
         val db = Firebase.firestore
         val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
-
         mainContent.visibility = View.GONE
+        userImage.visibility = View.GONE
         loader.visibility = View.VISIBLE
+        userImgLoader.visibility = View.VISIBLE
+
+        storageReference.child("images/${user.UID}").downloadUrl
+            .addOnSuccessListener {
+                Picasso.get().load(it).into(userImage)
+                userImage.visibility = View.VISIBLE
+                userImgLoader.visibility = View.GONE
+            }
+            .addOnFailureListener {
+                userImage.visibility = View.VISIBLE
+                userImgLoader.visibility = View.GONE
+            }
+
         db.collection("friends")
             .get()
             .addOnSuccessListener { documents ->

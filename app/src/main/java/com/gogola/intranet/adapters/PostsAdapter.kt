@@ -15,6 +15,8 @@ import com.gogola.intranet.R
 import com.gogola.intranet.classes.Post
 import com.gogola.intranet.extinsions.showMessage
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import java.util.*
 
 class PostsAdapter(
@@ -34,11 +36,12 @@ class PostsAdapter(
     override fun getItemCount(): Int = posts.size
 
     inner class PostViewHolder(view: View, context: Context) : RecyclerView.ViewHolder(view) {
-        private val imageContainer: ImageView = view.findViewById(R.id.userImg)
+        private val imageContainer: ImageView = view.findViewById(R.id.post_user_img)
         private val name: TextView = view.findViewById(R.id.name)
         private val postText: TextView = view.findViewById(R.id.text)
         private val postDate: TextView = view.findViewById(R.id.date)
         var currentUID = FirebaseAuth.getInstance().currentUser?.uid
+        private val storageReference = FirebaseStorage.getInstance().reference
 
         private fun getDate(timestamp: Long): String {
             val calendar = Calendar.getInstance(Locale.ENGLISH)
@@ -50,6 +53,13 @@ class PostsAdapter(
             name.text = postInfo.postOwner
             postText.text = postInfo.text
             postDate.text = getDate(postInfo.date.toLong())
+
+            storageReference.child("images/${postInfo.ownerID}").downloadUrl
+                .addOnSuccessListener {
+                    Picasso.get().load(it).into(imageContainer)
+                }
+                .addOnFailureListener {
+                }
 
             itemView.setOnClickListener() {
                 if (posts[adapterPosition].ownerID == currentUID.toString()) {
