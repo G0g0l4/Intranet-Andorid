@@ -40,6 +40,7 @@
             android:background="@drawable/left_rounded_bg">
 
             <LinearLayout
+                android:id="@+id/detailed_main_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
@@ -74,10 +75,10 @@
                     android:id="@+id/already_friends"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:layout_marginTop="7dp"
                     android:text="@string/friend"
                     android:textColor="@color/main_text_color"
-                    android:textSize="25sp"
+                    android:textSize="16sp"
                     android:visibility="gone" />
 
                 <Button
@@ -88,8 +89,21 @@
                     android:backgroundTint="@color/delete"
                     android:text="@string/remove_from_friends"
                     android:visibility="gone" />
-
             </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/add_friend_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <com.github.ybq.android.spinkit.SpinKitView
+                    style="@style/SpinKitView.Large.WanderingCubes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:SpinKit_Color="@color/colorAccent" />
+            </RelativeLayout>
         </RelativeLayout>
     </FrameLayout>
 
